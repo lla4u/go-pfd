@@ -18,24 +18,24 @@ func payloadDecode(key string, payload []byte) {
 	// EGT & CHT require additional as third payload byte hold key index starting from 0
 	case "CHT", "EGT": // "05DDFD00", "05DCFD00"
 		key = fmt.Sprintf("%s%v", key, payload[2]+1)
-		fmt.Printf("payloadDecode: %v : %v : %v : %v", key, len(payload), payload, payload[4:])
 		bits = binary.LittleEndian.Uint32(payload[4:])
-		fmt.Printf(" = %v\n", math.Float32frombits(bits))
-
-	case "GPSOperationStatus":
-		fmt.Printf("payloadDecodeGGGGGG: %v : %v : %v", key, len(payload), payload)
-		// Satellites count
-		if len(payload) == 7 {
-			fmt.Printf(" = Sats: %v - (3D)\n", payload[4])
-		} else {
-			fmt.Printf(" = Sats: %v (No 3D)\n", payload[4])
+		if *verbose {
+			log.WithFields(log.Fields{"Measurement": key, "Payload lenght": len(payload), "Payload": payload, "Value": math.Float32frombits(bits)}).Info("Can Frame Payload")
 		}
+
+	case "GPSOperationStatus": // Only deal with Satellites in view
+		//		fmt.Printf("payloadDecodeGGGGGG: %v : %v : %v", key, len(payload), payload)
+		if *verbose {
+			log.WithFields(log.Fields{"Measurement": key, "Payload lenght": len(payload), "Payload": payload, "Satellites": payload[4]}).Info("Can Frame Payload")
+		}
+		bits = binary.LittleEndian.Uint32(payload[4:4])
 
 	default:
 		// Convert 4 last bytes as bits
-		fmt.Printf("payloadDecode: %v : %v : %v : %v", key, len(payload), payload, payload[4:])
 		bits = binary.LittleEndian.Uint32(payload[4:])
-		fmt.Printf(" = %v\n", math.Float32frombits(bits))
+		if *verbose {
+			log.WithFields(log.Fields{"Measurement": key, "Payload lenght": len(payload), "Payload": payload, "Value": math.Float32frombits(bits)}).Info("Can Frame Payload")
+		}
 	}
 
 	// Lock
@@ -74,7 +74,7 @@ func logDakuFrame(frm can.Frame) {
 		recid := extendedFrameTouUint16(frm.ID)
 
 		if *verbose {
-			log.WithFields(log.Fields{"Frame ID": frm.ID, "ID": recid}).Info("Can Frame")
+			log.WithFields(log.Fields{"Frame ID": fmt.Sprintf("%x", frm.ID), "ID": recid}).Info("Can Frame")
 		}
 		switch recid {
 
@@ -285,9 +285,8 @@ func logDakuFrame(frm can.Frame) {
 
 		default:
 			if *verbose {
-				log.WithFields(log.Fields{"Frame ID": frm.ID, "ID": recid, "Payload": payload}).Info("Can Frame (Unknown)")
+				log.WithFields(log.Fields{"Frame ID": frm.ID, "ID": recid, "Payload": payload}).Warn("Can Frame (Unknown)")
 			}
-			// fmt.Printf("Found Unknown ! : %d - %v\n", recid, payload)
 		}
 	}
 }

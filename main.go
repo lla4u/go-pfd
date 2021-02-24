@@ -11,7 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// SafeCounter struc to store measurements such as Engine, AHRS and GPS
+// SafeCounter struc store measurements such as Engine, AHRS and GPS
 // sync Mutex is used to prevent map simultaneous read and write.
 type SafeCounter struct {
 	mu  sync.Mutex
@@ -62,7 +62,7 @@ func main() {
 		defer logFile.Close()
 		// SetLevel can be invoqued only once
 		log.SetOutput(logFile)
-		log.SetLevel(log.WarnLevel)
+		log.SetLevel(log.ErrorLevel)
 	}
 
 	log.WithFields(log.Fields{"frequency": frequency}).Info("Flag sampling frequency")

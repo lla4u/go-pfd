@@ -3,7 +3,7 @@
 ## Compilation
 env GOOS=linux GOARCH=arm GOARM=6 go build .  
 
-## RaspBerri Zero
+## Raspberri Pi Zero W
 
 ### Config (/boot/config.txt)  
 ####CAN 12 MHz clock!  
@@ -19,7 +19,7 @@ dtoverlay=pps-gpio,gpiopin=18
 root=PARTUUID=4cbd14f4-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait  
   
 ### DHCP (/etc/dhcpcd.conf)
-interface wlan0
-static ip_address=192.168.1.200/24
-static routers=192.168.1.1
-static domain_name_servers=192.168.1.1
+interface wlan0  
+static ip_address=192.168.1.200/24  
+static routers=192.168.1.1  
+static domain_name_servers=192.168.1.1  
