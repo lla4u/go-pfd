@@ -46,11 +46,6 @@ func InsertInflux(l *SafeCounter, c client.Client) {
 
 		// fmt.Printf("k: %v - v: %v\n", k, v)
 
-		// No need to store GpsTime in Measurements
-		if k == "GpsTime" {
-			continue
-		}
-
 		// Empty tag
 		tags := map[string]string{}
 
