@@ -20,8 +20,8 @@ database: bbox
 username: admin  
 password: generic
 
-CREATE DATABASE bbox
-CREATE USER admin WITH PASSWORD 'generic' WITH ALL PRIVILEGES
+CREATE DATABASE bbox  
+CREATE USER admin WITH PASSWORD 'generic' WITH ALL PRIVILEGES  
 
 Install
 ### Grafana
@@ -52,3 +52,24 @@ interface wlan0
 static ip_address=192.168.1.200/24  
 static routers=192.168.1.1  
 static domain_name_servers=192.168.1.1  
+
+### systemd (/etc/systemd/system/bbox.service)  
+[Unit]  
+Description=BBOX 
+  
+Wants=network.target  
+After=syslog.target network-online.target  
+  
+[Service]  
+Type=simple  
+ExecStart=/usr/local/bin/go-pfd  
+Restart=on-failure  
+RestartSec=10  
+KillMode=process  
+  
+[Install]  
+WantedBy=multi-user.target  
+
+sudo chmod 640 /etc/systemd/system/bbox.service  
+sudo systemctl daemon-reload  
+sudo systemctl enable bbox
