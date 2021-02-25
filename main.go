@@ -11,11 +11,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Mesure structure for map SafeCounter
+type Mesure struct {
+	Type  string
+	Value interface{}
+}
+
 // SafeCounter struc store measurements such as Engine, AHRS and GPS
 // sync Mutex is used to prevent map simultaneous read and write.
 type SafeCounter struct {
 	mu  sync.Mutex
-	agg map[string]interface{}
+	agg map[string]Mesure
 }
 
 // Global variables
@@ -23,7 +29,7 @@ var verbose *bool // Flag verbose mode
 var frequency int // Flag sampling frequency
 var gps *bool     // Flag to enable external Gps
 
-var sc SafeCounter = SafeCounter{agg: make(map[string]interface{})} // Cumulative measurements
+var sc SafeCounter = SafeCounter{agg: make(map[string]Mesure)} // Cumulative measurements
 
 func main() {
 
@@ -86,7 +92,7 @@ func main() {
 			InsertInflux(&sc, client)
 
 			// Flush map for next round
-			sc.agg = make(map[string]interface{})
+			sc.agg = make(map[string]Mesure)
 			sc.mu.Unlock()
 		}
 	}()

@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func payloadDecode(key string, payload []byte) {
+func payloadDecode(key string, genre string, payload []byte) {
 
 	var bits uint32
 
@@ -42,7 +42,7 @@ func payloadDecode(key string, payload []byte) {
 	sc.mu.Lock()
 
 	// Convert bits to float and save
-	sc.agg[key] = math.Float32frombits(bits)
+	sc.agg[key] = Mesure{genre, math.Float32frombits(bits)}
 
 	// Unloc
 	sc.mu.Unlock()
@@ -80,132 +80,132 @@ func logDakuFrame(frm can.Frame) {
 
 		case 500: //"01F4FD00"
 			// fmt.Println("Found Engine RPM !")
-			payloadDecode("EngineRPM", payload)
+			payloadDecode("EngineRPM", "ENGINE", payload)
 
 		case 1501: //"05DDFD00"
 			// fmt.Println("Found EGT !")
-			payloadDecode("EGT", payload)
+			payloadDecode("EGT", "ENGINE", payload)
 
 		case 1500: //"05DCFD00"
 			// fmt.Println("Found CHT !")
-			payloadDecode("CHT", payload)
+			payloadDecode("CHT", "ENGINE", payload)
 
 		case 532: //"0214FD00"
 			// fmt.Println("Found Oil Pressure !")
-			payloadDecode("OilPressure", payload)
+			payloadDecode("OilPressure", "ENGINE", payload)
 
 		case 536: //"0218FD00"
 			// fmt.Println("Found Oil Temperature !")
-			payloadDecode("OilTemperature", payload)
+			payloadDecode("OilTemperature", "ENGINE", payload)
 
 		case 528: //"0210FD00"
 			// fmt.Println("Found Manifold Pressure !")
-			payloadDecode("ManifoldPressure", payload)
+			payloadDecode("ManifoldPressure", "ENGINE", payload)
 
 		case 684: //"02ACFD00"
 			// fmt.Println("Found Fuel Pressure !")
-			payloadDecode("FuelPressure", payload)
+			payloadDecode("FuelPressure", "ENGINE", payload)
 
 		case 920: //"0398FD00"
 			// fmt.Println("Found Voltage !")
-			payloadDecode("Voltage", payload)
+			payloadDecode("Voltage", "ENGINE", payload)
 
 		case 930: //"03A2FD00"
 			// fmt.Println("Found Current !")
-			payloadDecode("Current", payload)
+			payloadDecode("Current", "ENGINE", payload)
 
 		case 668: //"029CFD00"
 			// fmt.Println("Found Fuel Level !")
-			payloadDecode("FuelLevel", payload)
+			payloadDecode("FuelLevel", "ENGINE", payload)
 
 		case 1511: //"05E7FD00"
 			// fmt.Println("Found Fuel Flow !")
-			payloadDecode("FuelFlow", payload)
+			payloadDecode("FuelFlow", "ENGINE", payload)
 
 		case 700: //"02BCFD00"
 			// fmt.Println("Found Rotor RPM !")
-			payloadDecode("RotorRPM", payload)
+			payloadDecode("RotorRPM", "ENGINE", payload)
 
 		case 1522: //"05F2FC00"
 			// fmt.Println("Found Flight Time !")
-			payloadDecode("FlightTime", payload)
+			payloadDecode("FlightTime", "AIRU", payload)
 
 		case 1510: //"05E6FC00"
 			// fmt.Println("Found Engine Total Time !")
-			payloadDecode("EngineTotalTime", payload)
+			payloadDecode("EngineTotalTime", "ENGINE", payload)
 
 		case 524: //"020CFD00"
 			// fmt.Println("Found Engine Fuel Flow Rate !")
-			payloadDecode("EngineFuelFlowRate", payload)
+			payloadDecode("EngineFuelFlowRate", "ENGINE", payload)
 
 			// PFD
 		case 300: //
 			// fmt.Println("Found Acceleration in x (longitudinal) !")
-			payloadDecode("AccelX", payload)
+			payloadDecode("AccelX", "AIRU", payload)
 
 		case 301: //
 			// fmt.Println("Found Acceleration in y (lateral) !")
-			payloadDecode("AccelY", payload)
+			payloadDecode("AccelY", "AIRU", payload)
 
 		case 302: //
 			// fmt.Println("Found Acceleration in z (normal) !")
-			payloadDecode("AccelZ", payload)
+			payloadDecode("AccelZ", "AIRU", payload)
 
 		case 303: //
 			// fmt.Println("Found Pitch rate !")
-			payloadDecode("PitchRate", payload)
+			payloadDecode("PitchRate", "AIRU", payload)
 
 		case 304: //
 			// fmt.Println("Found Roll rate !")
-			payloadDecode("RollRate", payload)
+			payloadDecode("RollRate", "AIRU", payload)
 
 		case 305: //
 			// fmt.Println("Found Yaw rate !")
-			payloadDecode("YawRate", payload)
+			payloadDecode("YawRate", "AIRU", payload)
 
 		case 311: //
 			// fmt.Println("Found Pitch angle (up is positive) !")
-			payloadDecode("PitchAngle", payload)
+			payloadDecode("PitchAngle", "AIRU", payload)
 
 		case 312: //
 			// fmt.Println("Found Roll angle (right roll is positive) !")
-			payloadDecode("RollAngle", payload)
+			payloadDecode("RollAngle", "AIRU", payload)
 
 		case 314: //
 			// fmt.Println("Found Vertical speed !")
-			payloadDecode("VerticalSpeed", payload)
+			payloadDecode("VerticalSpeed", "AIRU", payload)
 
 		case 319: //
 			// fmt.Println("Found Barometric correction (QNH) !")
-			payloadDecode("QNH", payload)
+			payloadDecode("QNH", "AIRU", payload)
 
 		case 320: //
 			// fmt.Println("Found Baro corrected altitude !")
-			payloadDecode("BaroCorrectedAltitude", payload)
+			payloadDecode("BaroCorrectedAltitude", "AIRU", payload)
 
 		case 321: //
 			// fmt.Println("Found Heading angle !")
-			payloadDecode("HeadingAngle", payload)
+			payloadDecode("HeadingAngle", "AIRU", payload)
 
 		case 322: //
 			// fmt.Println("Found Standard altitude !")
-			payloadDecode("StandardAltitude", payload)
+			payloadDecode("StandardAltitude", "AIRU", payload)
 
 		case 325: //
 			// fmt.Println("Found Differential pressure !")
-			payloadDecode("DifferentialPressure", payload)
+			payloadDecode("DifferentialPressure", "AIRU", payload)
 
 		case 326: //
 			// fmt.Println("Found Static pressure !")
-			payloadDecode("StaticPressure", payload)
+			payloadDecode("StaticPressure", "AIRU", payload)
 
 		case 327: //
 			// fmt.Println("Found Heading rate !")
-			payloadDecode("HeadingRate", payload)
+			payloadDecode("HeadingRate", "AIRU", payload)
 
 		case 335: //
 			// fmt.Println("Found Outside air temperature !")
-			payloadDecode("OutAirTemp", payload)
+			payloadDecode("OutAirTemp", "AIRU", payload)
 
 		case 405: //
 			// fmt.Println("Found Pitch trim position (-1 left)  !")
@@ -217,47 +217,47 @@ func logDakuFrame(frm can.Frame) {
 
 		case 1036: //
 			// fmt.Println("Found Latitude from GPS !")
-			payloadDecode("LatitudeFromGPS", payload)
+			payloadDecode("LatitudeFromGPS", "GPS", payload)
 
 		case 1037: //
 			// fmt.Println("Found Longitude from GPS !")
-			payloadDecode("LongitudeFromGPS", payload)
+			payloadDecode("LongitudeFromGPS", "GPS", payload)
 
 		case 1038: //
 			// fmt.Println("Found Height above WGS84 ellipsoid from GPS  !")
-			payloadDecode("HeightFromGPS ", payload)
+			payloadDecode("HeightFromGPS ", "GPS", payload)
 
 		case 1039: //
 			// fmt.Println("Found Ground speed from GPS !")
-			payloadDecode("GroundSpeedFromGPS", payload)
+			payloadDecode("GroundSpeedFromGPS", "GPS", payload)
 
 		case 1045: //
 			// fmt.Println("Found PDOP from GPS !")
-			payloadDecode("PDOPFromGPS", payload)
+			payloadDecode("PDOPFromGPS", "GPS", payload)
 
 		case 1046: //
 			// fmt.Println("Found VDOP from GPS !")
-			payloadDecode("VDOPFromGPS", payload)
+			payloadDecode("VDOPFromGPS", "GPS", payload)
 
 		case 1047: //
 			// fmt.Println("Found HDOP from GPS !")
-			payloadDecode("HDOPFromGPS", payload)
+			payloadDecode("HDOPFromGPS", "GPS", payload)
 
-		case 1048: // Special multi coding
+		case 1048: // Special multi coding TODO
 			// fmt.Println("Found GPS Operation Status  !")
-			payloadDecode("GPSOperationStatus", payload)
+			// payloadDecode("GPSOperationStatus", "GPS", payload)
 
 		case 1049: //
 			// fmt.Println("Found Latitude from KF !")
-			payloadDecode("LatitudeFromKF", payload)
+			payloadDecode("LatitudeFromKF", "GPS", payload)
 
 		case 1050: //
 			// fmt.Println("Found Longitude from KF !")
-			payloadDecode("LongitudeFromKF", payload)
+			payloadDecode("LongitudeFromKF", "GPS", payload)
 
 		case 1121: //
 			// fmt.Println("Found Magnetic declination !")
-			payloadDecode("MagneticDeclination", payload)
+			payloadDecode("MagneticDeclination", "GPS", payload)
 
 		case 1502: // Special Date from RTC
 			// fmt.Println("Found Date – in juliand day representation !")
@@ -269,19 +269,19 @@ func logDakuFrame(frm can.Frame) {
 
 		case 1513: //
 			// fmt.Println("Found Roll gyro bias !")
-			payloadDecode("RollGyroBias", payload)
+			payloadDecode("RollGyroBias", "AIRU", payload)
 
 		case 1514: //
 			// fmt.Println("Found Pitch gyro bias !")
-			payloadDecode("PitchGyroBias", payload)
+			payloadDecode("PitchGyroBias", "AIRU", payload)
 
 		case 1515: //
 			// fmt.Println("Found Yaw gyro bias !")
-			payloadDecode("YawGyroBias", payload)
+			payloadDecode("YawGyroBias", "AIRU", payload)
 
 		case 1527: //
 			// fmt.Println("Found Power-on total time  !")
-			payloadDecode("PowerOnTotalTime ", payload)
+			payloadDecode("PowerOnTotalTime ", "AIRU", payload)
 
 		default:
 			if *verbose {

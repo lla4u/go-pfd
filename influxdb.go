@@ -31,6 +31,9 @@ func influxDBClient() client.Client {
 // TODO: Group fields IE Engine, GPS, ...
 func InsertInflux(l *SafeCounter, c client.Client) {
 
+	// records Type are made of ENGINE, AIRU, GPS types.
+	groups := [3]string{"ENGINE", "AIRU", "GPS"}
+
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  database,
 		Precision: "s",
@@ -42,29 +45,32 @@ func InsertInflux(l *SafeCounter, c client.Client) {
 	// tm := (l.agg["GpsTime"]).(time.Time)
 	tm := time.Now()
 
-	for k, v := range l.agg {
+	for _, t := range groups {
 
-		// fmt.Printf("k: %v - v: %v\n", k, v)
-
-		// Empty tag
 		tags := map[string]string{}
 
-		fields := map[string]interface{}{
-			k: v,
-		}
-		// Make Point
-		point, err := client.NewPoint(
-			k,
-			tags,
-			fields,
-			tm,
-		)
-		if err != nil {
-			log.Fatalln("Adding Point Error: ", err)
-		}
+		fields := map[string]interface{}{}
 
-		// Add Point in Batch
-		bp.AddPoint(point)
+		for k, v := range l.agg {
+
+			if v.Type == t {
+				fields[k] = v.Value
+			}
+		}
+		if len(fields) > 0 {
+			// Make Point
+			point, err := client.NewPoint(
+				t,
+				tags,
+				fields,
+				tm,
+			)
+			if err != nil {
+				log.Fatalln("Adding Point Error: ", err)
+			}
+			// Add Point in Batch
+			bp.AddPoint(point)
+		}
 	}
 	// Save points in DB
 	err = c.Write(bp)
