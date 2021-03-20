@@ -1,0 +1,31 @@
+version: '2'
+services:
+  influxdb:
+    image: influxdb:1.8.3
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
+      - ./influxdb-provisioning/backup:/backup
+      - ./influxdb-provisioning/script:/docker-entrypoint-initdb.d
+    environment:
+#      - INFLUXDB_DB=BBOX
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana-provisioning/:/etc/grafana/provisioning
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_INSTALL_PLUGINS=pr0ps-trackmap-panel
+volumes:
+  influxdb-storage:
+  grafana-storage:
