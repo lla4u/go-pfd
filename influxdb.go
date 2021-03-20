@@ -28,11 +28,11 @@ func influxDBClient() client.Client {
 }
 
 // InsertInflux function
-// TODO: Group fields IE Engine, GPS, ...
+// Todo souhaitable de sortir log Fatal pour log Error ?
 func InsertInflux(l *SafeCounter, c client.Client) {
 
-	// records Type are made of ENGINE, AIRU, GPS types.
-	groups := [3]string{"ENGINE", "AIRU", "GPS"}
+	// records types are made of ENGINE, AIRU, GPS types.
+	groups := [4]string{"ENGINE", "AIRU", "GPS", "Unknown"}
 
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  database,

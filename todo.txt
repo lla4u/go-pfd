@@ -1,0 +1,34 @@
+1/ Analyze :
+		case 1522: //"05F2FC00"
+			// fmt.Println("Found Flight Time !")
+			// payloadDecode("FlightTime", "AIRU", payload)
+
+
+Mar 13 09:57:38 bbox-large systemd[1]: Started Black Box Service.
+Mar 13 09:57:39 bbox-large go-pfd[891]: panic: runtime error: index out of range [3] with length 1
+Mar 13 09:57:39 bbox-large go-pfd[891]: goroutine 1 [running]:
+Mar 13 09:57:39 bbox-large go-pfd[891]: encoding/binary.littleEndian.Uint32(...)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/usr/local/go/src/encoding/binary/binary.go:64
+Mar 13 09:57:39 bbox-large go-pfd[891]: main.payloadDecode(0x2d675f, 0xa, 0x2d4ebf, 0x4, 0xdc21b8, 0x5, 0x8)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/Users/lla/Documents/Development/go/go-pfd/can.go:35 +0xa90
+Mar 13 09:57:39 bbox-large go-pfd[891]: main.logDakuFrame(0x85f2fe00, 0x8, 0x1000400, 0x16)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/Users/lla/Documents/Development/go/go-pfd/can.go:131 +0xf7c
+Mar 13 09:57:39 bbox-large go-pfd[891]: github.com/brutella/can.(*handler).Handle(0xd9e010, 0x85f2fe00, 0x8, 0x1000400, 0x16)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/Users/lla/go/pkg/mod/github.com/brutella/can@v0.0.2/handler.go:21 +0x2c
+Mar 13 09:57:39 bbox-large go-pfd[891]: github.com/brutella/can.(*Bus).publish(0xd36d9c, 0x85f2fe00, 0x8, 0x1000400, 0x16)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/Users/lla/go/pkg/mod/github.com/brutella/can@v0.0.2/bus.go:115 +0x5c
+Mar 13 09:57:39 bbox-large go-pfd[891]: github.com/brutella/can.(*Bus).publishNextFrame(0xd36d9c, 0x0, 0x0)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/Users/lla/go/pkg/mod/github.com/brutella/can@v0.0.2/bus.go:108 +0xf8
+Mar 13 09:57:39 bbox-large go-pfd[891]: github.com/brutella/can.(*Bus).ConnectAndPublish(0xd36d9c, 0x4ad634, 0x0)
+Mar 13 09:57:39 bbox-large go-pfd[891]: #011/Users/lla/go/pkg/mod/github.com/brutella/can@v0.0.2/bus.go:43 +0x1c
+Mar 13 09:57:39 bbox-large go-pfd[891]: main.main()
+
+2/ modify bbox service to restart in 3 secs
+
+3/ Under voltage detected !
+Mar 13 09:57:29 bbox-large kernel: [  356.794128] Voltage normalised (0x00000000)
+Mar 13 09:57:31 bbox-large kernel: [  358.874156] Under-voltage detected! (0x00050005)
+Mar 13 09:57:35 bbox-large kernel: [  363.034100] Voltage normalised (0x00000000)
+Mar 13 09:57:37 bbox-large kernel: [  365.114136] Under-voltage detected! (0x00050000)
+Ma
+

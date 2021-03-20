@@ -76,6 +76,7 @@ func logDakuFrame(frm can.Frame) {
 		if *verbose {
 			log.WithFields(log.Fields{"Frame ID": fmt.Sprintf("%x", frm.ID), "ID": recid}).Info("Can Frame")
 		}
+
 		switch recid {
 
 		case 500: //"01F4FD00"
@@ -122,13 +123,13 @@ func logDakuFrame(frm can.Frame) {
 			// fmt.Println("Found Fuel Flow !")
 			payloadDecode("FuelFlow", "ENGINE", payload)
 
-		case 700: //"02BCFD00"
+		case 700: //"02BCFD00" Removed as buggy for now
 			// fmt.Println("Found Rotor RPM !")
-			payloadDecode("RotorRPM", "ENGINE", payload)
+			// payloadDecode("RotorRPM", "ENGINE", payload)
 
 		case 1522: //"05F2FC00"
 			// fmt.Println("Found Flight Time !")
-			payloadDecode("FlightTime", "AIRU", payload)
+			// payloadDecode("FlightTime", "AIRU", payload)
 
 		case 1510: //"05E6FC00"
 			// fmt.Println("Found Engine Total Time !")
@@ -175,6 +176,14 @@ func logDakuFrame(frm can.Frame) {
 			// fmt.Println("Found Vertical speed !")
 			payloadDecode("VerticalSpeed", "AIRU", payload)
 
+		case 315: //
+			// fmt.Println("Found Indicated Airspeed !")
+			payloadDecode("IndicatedAirspeed", "AIRU", payload)
+
+		case 316: //
+			// fmt.Println("Found True Airspeed !")
+			payloadDecode("TrueAirspeed", "AIRU", payload)
+
 		case 319: //
 			// fmt.Println("Found Barometric correction (QNH) !")
 			payloadDecode("QNH", "AIRU", payload)
@@ -212,8 +221,8 @@ func logDakuFrame(frm can.Frame) {
 			// payloadDecode("PitchTrimPosition", payload)
 
 		case 410: //
-		// fmt.Println("Found Pitch trim speed  !")
-		// payloadDecode("PitchTrimSpeed", payload)
+			// fmt.Println("Found Pitch trim speed  !")
+			// payloadDecode("PitchTrimSpeed", "AIRU", payload)
 
 		case 1036: //
 			// fmt.Println("Found Latitude from GPS !")
@@ -243,7 +252,8 @@ func logDakuFrame(frm can.Frame) {
 			// fmt.Println("Found HDOP from GPS !")
 			payloadDecode("HDOPFromGPS", "GPS", payload)
 
-		case 1048: // Special multi coding TODO
+		case 1048: // Do nothing as Sattellite count is changing from 8 to 7 bytes ...
+			// Special multi coding TODO
 			// fmt.Println("Found GPS Operation Status  !")
 			// payloadDecode("GPSOperationStatus", "GPS", payload)
 
@@ -259,11 +269,11 @@ func logDakuFrame(frm can.Frame) {
 			// fmt.Println("Found Magnetic declination !")
 			payloadDecode("MagneticDeclination", "GPS", payload)
 
-		case 1502: // Special Date from RTC
+		case 1502: // Do nothing as Date is from RTC
 			// fmt.Println("Found Date – in juliand day representation !")
 			// payloadDecode("Date", payload)
 
-		case 1503: // Special Time from RTC
+		case 1503: // Do nothing as Time is from RTC
 			// fmt.Println("Found Time – seconds after UTC midnight !")
 			// payloadDecode("Time", payload)
 
@@ -281,12 +291,15 @@ func logDakuFrame(frm can.Frame) {
 
 		case 1527: //
 			// fmt.Println("Found Power-on total time  !")
-			payloadDecode("PowerOnTotalTime ", "AIRU", payload)
+			payloadDecode("PowerOnTotalTime", "AIRU", payload)
 
 		default:
 			if *verbose {
 				log.WithFields(log.Fields{"Frame ID": frm.ID, "ID": recid, "Payload": payload}).Warn("Can Frame (Unknown)")
 			}
+			// if len(payload) == 8 {
+			// 	payloadDecode(fmt.Sprintf("Unknown_%v", recid), "Unknown", payload)
+			// }
 		}
 	}
 }

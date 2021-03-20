@@ -61,7 +61,7 @@ func main() {
 		log.WithFields(log.Fields{"verbose": *verbose}).Info("Flag verbose mode enabled")
 
 	} else {
-		logFile, err := os.OpenFile("info.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		logFile, err := os.OpenFile("/var/log/bbox/bbox.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -79,6 +79,10 @@ func main() {
 	client := influxDBClient()
 	defer client.Close()
 
+	// Portal to download influxdb
+	log.Info("Starting Portal (backup capability) ...")
+	go portal()
+
 	// Goroutine to flush into db at frequency
 	ticker := time.NewTicker(time.Duration(frequency) * time.Second)
 	go func() {
@@ -86,13 +90,16 @@ func main() {
 			sc.mu.Lock()
 
 			if *verbose {
-				log.WithFields(log.Fields{"measurements": sc.agg}).Info("Measurements")
+				log.WithFields(log.Fields{"Record Len": len(sc.agg), "Measurements": sc.agg}).Info("Measurements")
+			}
+			// No need to insert empty record
+			if len(sc.agg) > 0 {
+				InsertInflux(&sc, client)
+
+				// Flush map for next round
+				sc.agg = make(map[string]Mesure)
 			}
 
-			InsertInflux(&sc, client)
-
-			// Flush map for next round
-			sc.agg = make(map[string]Mesure)
 			sc.mu.Unlock()
 		}
 	}()

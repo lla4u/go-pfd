@@ -1,0 +1,17 @@
+# Backup:
+ influxd backup -portable -database BBOX /tmp/bbox-large
+
+# Restore
+## apt update
+## apt install -y openssh-client (scp)
+## mkdir backup
+## cd backup
+## scp pi@bbox-large.local:/tmp/bbox-large/20210315T085052Z.\* .
+## influxd restore -portable .
+
+## New docker image
+docker run -p 8086:8086 \
+-e INFLUXDB_ADMIN_USER=admin\
+-e INFLUXDB_ADMIN_PASSWORD=generic \
+-v influxdb:<influxdb_path> \
+influxdb
