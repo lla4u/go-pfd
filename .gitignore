@@ -17,3 +17,4 @@ go-pfd
 
 # log file
 *.log
+.DS_Store
