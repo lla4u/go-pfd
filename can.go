@@ -123,11 +123,11 @@ func logDakuFrame(frm can.Frame) {
 			// fmt.Println("Found Fuel Flow !")
 			payloadDecode("FuelFlow", "ENGINE", payload)
 
-		case 700: //"02BCFD00" Removed as buggy for now
-			// fmt.Println("Found Rotor RPM !")
-			// payloadDecode("RotorRPM", "ENGINE", payload)
+		case 700: //"02BCFD00"
+			fmt.Println("Found Rotor RPM !")
+			payloadDecode("RotorRPM", "ENGINE", payload)
 
-		case 1522: //"05F2FC00"
+		case 1522: //"05F2FC00" Removed as buggy for now
 			// fmt.Println("Found Flight Time !")
 			// payloadDecode("FlightTime", "AIRU", payload)
 
